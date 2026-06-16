@@ -877,3 +877,26 @@ if __name__ == "__main__":
     while True:
         try: bot.infinity_polling(timeout=50, long_polling_timeout=45, skip_pending=True)
         except: time.sleep(2)
+
+import threading
+from flask import Flask
+from telebot import TeleBot  # или как ты импортируешь бота
+
+# Создаём Flask-приложение
+app = Flask(__name__)
+
+@app.route('/')
+def health():
+    return "OK", 200
+
+def run_flask():
+    app.run(host='0.0.0.0', port=8080)
+
+# Запускаем Flask в отдельном потоке (до бота)
+threading.Thread(target=run_flask, daemon=True).start()
+
+# А ТЕПЕРЬ ТВОЙ ОСНОВНОЙ КОД БОТА (polling)
+if __name__ == '__main__':
+    # Твой код запуска бота:
+    # bot.infinity_polling() или bot.polling()
+    bot.infinity_polling()
