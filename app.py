@@ -879,24 +879,34 @@ if __name__ == "__main__":
         except: time.sleep(2)
 
 import threading
+import time
 from flask import Flask
 from telebot import TeleBot  # или как ты импортируешь бота
 
-# Создаём Flask-приложение
+# --- СОЗДАЁМ FLASK ДЛЯ RENDER ---
 app = Flask(__name__)
 
 @app.route('/')
 def health():
     return "OK", 200
 
+@app.route('/ping')
+def ping():
+    return "pong", 200
+
 def run_flask():
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080, debug=False)
 
-# Запускаем Flask в отдельном потоке (до бота)
-threading.Thread(target=run_flask, daemon=True).start()
+# --- ЗАПУСКАЕМ FLASK В ПОТОКЕ ---
+flask_thread = threading.Thread(target=run_flask, daemon=True)
+flask_thread.start()
 
-# А ТЕПЕРЬ ТВОЙ ОСНОВНОЙ КОД БОТА (polling)
-if __name__ == '__main__':
-    # Твой код запуска бота:
-    # bot.infinity_polling() или bot.polling()
-    bot.infinity_polling()
+# --- НЕБОЛЬШАЯ ПАУЗА, ЧТОБЫ FLASK УСПЕЛ ЗАПУСТИТЬСЯ ---
+time.sleep(2)
+
+# --- ТЕПЕРЬ ЗАПУСКАЕМ БОТА ---
+# ЭТО ТВОЙ ОСНОВНОЙ КОД БОТА (ТО, ЧТО У ТЕБЯ БЫЛО)
+# Например:
+# bot.infinity_polling()
+# ИЛИ
+# bot.polling(none_stop=True)
