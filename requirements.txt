@@ -1,2 +1,3 @@
-aiohttp
-flask
+pyTelegramBotAPI
+requests
+PySocks
